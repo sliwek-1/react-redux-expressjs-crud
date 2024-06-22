@@ -2,6 +2,7 @@ import { fetchAllUsers, deleteUser } from "./services/http/usersServices"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react";
 import { v4 as uuidv4 } from 'uuid';
+import "./css/main.css";
 
 export function UserList() {
     let dispatch = useDispatch();
@@ -22,20 +23,47 @@ export function UserList() {
     
     return (
         <>
-            {inprogress ? <h1>Ładowanie...</h1> : null}
+            <div className="list-area">
+                {inprogress ? <h1>Ładowanie...</h1> : null}
 
-            
-            {error ? <h1>Błąd:</h1> : null}
+                
+                {error ? <h1 className="danger-control">Błąd:</h1> : null}
 
-            {users && users.length > 0 ? users.map(user => (
+                <table>
+                    <tr className="row-header">
+                        <th>ID</th>
+                        <th>Imię</th>
+                        <th>Nazwisko</th>
+                        <th>Email</th>
+                        <th>Usuń</th>
+                    </tr>
+                    <tbody>
+                {users && users.length > 0 ? users.map(user => (
 
-                <div key={uuidv4()} onClick={() => handleDelete(user.id)}>
-                    {user.id}. {user.firstname} {user.lastname}
-                </div>)) 
-
-            : 
-                <p>Nie ma użytkowników</p>
-            }
+                    <tr key={uuidv4()} className="row">
+                        <td>
+                            {user.id}.
+                        </td>
+                        <td>
+                            {user.firstname} 
+                        </td>
+                        <td>
+                            {user.lastname}
+                        </td>
+                        <td>
+                            {user.email}
+                        </td>
+                        <td>
+                            <button className="delete-btn" onClick={() => handleDelete(user.id)}>Usuń</button>
+                        </td>
+                    </tr>
+                )) 
+                : 
+                    <p className="info">Nie ma użytkowników</p>
+                }
+                    </tbody>
+                </table>
+            </div>
         </>
     )
 }
