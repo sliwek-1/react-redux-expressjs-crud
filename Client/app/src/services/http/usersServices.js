@@ -8,7 +8,10 @@ import {
     deleteUsersInProgress,
     createUserError,
     createUsersSuccess,
-    createUsersInProgress } from "../../actions/actionUsers"
+    createUsersInProgress,
+    updateUsersError,
+    updateUsersInProgress,
+    updateUsersSuccess } from "../../actions/actionUsers"
 
 export const fetchAllUsers = () => {
     return dispatch => {
@@ -79,6 +82,33 @@ export const createUser = (user) => {
         })
         .catch(error => {
             dispatch(createUserError(error))
+        })
+    }
+}
+
+export const updateUser = (user) => {
+    const {id, firstname, lastname, email} = user;
+    return dispatch => {
+        dispatch(updateUsersInProgress())
+        fetch(routes.server + routes.route.api.users.put + `/${id}/${firstname}/${lastname}/${email}`,{
+            method: 'PUT'
+        })
+        .then(res => {
+            if(!res.ok) {
+                throw new Error("Network response was not ok");
+            }
+            return res.json();
+        })
+        .then(res => {
+            if(res.error) {
+                throw res.error
+            }
+            // console.log(res)
+            dispatch(updateUsersSuccess(res.user))
+            return res;
+        })
+        .catch(error => {
+            dispatch(updateUsersError(error))
         })
     }
 }

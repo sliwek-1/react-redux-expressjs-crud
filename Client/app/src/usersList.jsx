@@ -1,6 +1,6 @@
-import { fetchAllUsers, deleteUser } from "./services/http/usersServices"
+import { fetchAllUsers, deleteUser, updateUser } from "./services/http/usersServices"
 import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from 'uuid';
 import "./css/main.css";
 
@@ -10,17 +10,23 @@ export function UserList() {
     let users = useSelector(state => state.users.users);
     let inprogress = useSelector(state => state.users.inprogress);
     let error = useSelector(state => state.users.error);
+    
+    const [isEdit, makeEdit] = useState(false)
 
     useEffect(() => {
-        dispatch(fetchAllUsers())
-        console.log(users)
+        dispatch(fetchAllUsers());
+        console.log(users);
     }, [dispatch])
 
     const handleDelete = (userId) => {
-        dispatch(deleteUser(userId))
-        console.log(object)
+        dispatch(deleteUser(userId));
+        console.log(object);
     }
-    
+
+    const handleUpdate = (user) => {
+        dispatch(updateUser(user))
+    }
+
     return (
         <>
             <div className="list-area">
@@ -35,10 +41,11 @@ export function UserList() {
                         <th>Imię</th>
                         <th>Nazwisko</th>
                         <th>Email</th>
+                        <th>Edytuj</th>
                         <th>Usuń</th>
                     </tr>
                     <tbody>
-                {users && users.length > 0 ? users.map(user => (
+                {users && users.length > 0 ? users.map((user) => (
 
                     <tr key={uuidv4()} className="row">
                         <td>
@@ -52,6 +59,11 @@ export function UserList() {
                         </td>
                         <td>
                             {user.email}
+                        </td>
+                        <td>
+                            <button className="update-btn" onClick={() => handleUpdate(user)}>
+                                    Edytuj
+                            </button>
                         </td>
                         <td>
                             <button className="delete-btn" onClick={() => handleDelete(user.id)}>Usuń</button>

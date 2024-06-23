@@ -4,6 +4,7 @@ import { Users } from "./models/usersModel.js";
 import { fetchAllUsers } from "./actions/fetchAllUsers.js";
 import { deleteUser } from "./actions/deleteUser.js";
 import { createUser } from "./actions/createUsers.js";
+import { updateUser } from "./actions/updateUser.js";
 const app = express();
 const port = 3000;
 
@@ -49,8 +50,27 @@ app.post('/api/createUser/:firstname/:lastname/:email', async (req, res) => {
   }
 })
 
-app.put('/api/updateUser/:userId/:firstname/:lastname/:email', (req, res) => {
-
+app.put('/api/updateUser/:userId/:firstname/:lastname/:email',async (req, res) => {
+  try {
+    const firstname = req.params.firstname;
+    const lastname = req.params.lastname;
+    const email = req.params.email;
+    const id = req.params.userId;
+    const newUser = {
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      id: id
+    }
+    const users = await updateUser(newUser);
+    if(users) {
+      res.status(200).json({ users });
+    } else {
+      res.status(500).json({ error: "Error" });
+    }
+  } catch(error) {
+    throw new Error(error)
+  }
 })
 
 app.delete('/api/deleteUser/:userId', async (req, res) => {

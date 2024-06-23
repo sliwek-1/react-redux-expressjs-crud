@@ -7,7 +7,10 @@ import {
     DELETE_USERS_INPROGRESS,
     CREATE_USERS_ERROR,
     CREATE_USERS_SUCCESS,
-    CREATE_USERS_INPROGRESS } from "./actionsUserTypes"
+    CREATE_USERS_INPROGRESS,
+    UPDATE_USERS_ERROR,
+    UPDATE_USERS_INPROGRESS,
+    UPDATE_USERS_SUCCESS } from "./actionsUserTypes"
 
 
 // FETCH USERS READ OPERATION 
@@ -53,7 +56,7 @@ export const deleteUserError = (error) => {
     }
 }
 
-// CREATE USERS CREATES USERS
+// CREATE USERS CREATE OPERATION
 
 export const createUsersInProgress = () => {
     return {
@@ -71,6 +74,28 @@ export const createUsersSuccess = (user) => {
 export const createUserError = (error) => {
     return {
         type: CREATE_USERS_ERROR,
+        error: error
+    }
+}
+
+// UPDATE USERS UPDATE OPERATION
+
+export const updateUsersInProgress = () => {
+    return {
+        type: UPDATE_USERS_INPROGRESS
+    }
+}
+
+export const updateUsersSuccess = (user) => {
+    return {
+        type: UPDATE_USERS_SUCCESS,
+        user: user
+    }
+}
+
+export const updateUsersError = (error) => {
+    return {
+        type: UPDATE_USERS_ERROR,
         error: error
     }
 }

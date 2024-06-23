@@ -6,8 +6,8 @@ function App() {
   return (
     <>
       <main className="main">
-        <RegisterForm />
-        <UserList/>
+          <RegisterForm />
+          <UserList/>
       </main>
     </>
   )

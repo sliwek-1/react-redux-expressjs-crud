@@ -5,7 +5,8 @@ export const routes = {
             users: {
                 get: "/api/allUsers",
                 delete: "/api/deleteUser",
-                post: "/api/createUser"
+                post: "/api/createUser",
+                put: "/api/updateUser"
             }
         }
     }
