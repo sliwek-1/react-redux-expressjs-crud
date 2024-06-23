@@ -10,8 +10,9 @@ export function UserList() {
     let users = useSelector(state => state.users.users);
     let inprogress = useSelector(state => state.users.inprogress);
     let error = useSelector(state => state.users.error);
+    const [isEdit, setIsEdit] = useState(false);
+    const [editUser, setEditUser] = useState(null);
     
-    const [isEdit, makeEdit] = useState(false)
 
     useEffect(() => {
         dispatch(fetchAllUsers());
@@ -24,7 +25,14 @@ export function UserList() {
     }
 
     const handleUpdate = (user) => {
-        dispatch(updateUser(user))
+        setEditUser(user); // Set the user to be edited
+        setIsEdit(true); // Enter edit mode
+    }
+
+    const handleSave = (editedUser) => {
+        dispatch(updateUser(editedUser));
+        setEditUser(null); // Clear the editUser state
+        setIsEdit(false); // Exit edit mode
     }
 
     return (
@@ -45,34 +53,48 @@ export function UserList() {
                         <th>Usuń</th>
                     </tr>
                     <tbody>
-                {users && users.length > 0 ? users.map((user) => (
-
-                    <tr key={uuidv4()} className="row">
-                        <td>
-                            {user.id}.
-                        </td>
-                        <td>
-                            {user.firstname} 
-                        </td>
-                        <td>
-                            {user.lastname}
-                        </td>
-                        <td>
-                            {user.email}
-                        </td>
-                        <td>
-                            <button className="update-btn" onClick={() => handleUpdate(user)}>
-                                    Edytuj
-                            </button>
-                        </td>
-                        <td>
-                            <button className="delete-btn" onClick={() => handleDelete(user.id)}>Usuń</button>
-                        </td>
-                    </tr>
-                )) 
-                : 
-                    <p className="info">Nie ma użytkowników</p>
-                }
+                    {users && users.length > 0 ? users.map((user) => (
+                        <tr key={user.id} className="row">
+                            <td>{user.id}.</td>
+                            <td>{isEdit && editUser && editUser.id === user.id ? (
+                                <input type="text" defaultValue={user.firstname} />
+                            ) : (
+                                user.firstname
+                            )}</td>
+                            <td>{isEdit && editUser && editUser.id === user.id ? (
+                                <input type="text" defaultValue={user.lastname} />
+                            ) : (
+                                user.lastname
+                            )}</td>
+                            <td>{isEdit && editUser && editUser.id === user.id ? (
+                                <input type="text" defaultValue={user.email} />
+                            ) : (
+                                user.email
+                            )}</td>
+                            <td>
+                                {isEdit && editUser && editUser.id === user.id ? (
+                                    <button className="update-btn" onClick={() => handleSave(user)}>
+                                        Zapisz
+                                    </button>
+                                ) : (
+                                    <button className="edit-btn" onClick={() => handleUpdate(user)}>
+                                        Edytuj
+                                    </button>
+                                )}
+                            </td>
+                            <td>
+                                <button className="delete-btn" onClick={() => handleDelete(user.id)}>
+                                    Usuń
+                                </button>
+                            </td>
+                        </tr>
+                    )) : (
+                        <tr>
+                            <td colSpan="6">
+                                <p className="info">Nie ma użytkowników</p>
+                            </td>
+                        </tr>
+                    )}
                     </tbody>
                 </table>
             </div>
